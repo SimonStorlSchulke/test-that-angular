@@ -8,7 +8,11 @@ export function componentTestBuilder<T>(fixture: ComponentFixture<T>) {
 }
 
 class ComponentTestBuilder<T> {
-  componentType: Type<T>;
+
+  suiteOperator: SuiteOperator = {
+    identifier: 'init',
+    fn: async () => {},
+  }
 
   constructor(private fixture: ComponentFixture<T>) {}
 
@@ -40,15 +44,7 @@ class ComponentTestBuilder<T> {
     return this;
   }
 
-  async build(): Promise<SuiteOperator> {
-    await TestBed.configureTestingModule({
-      imports: [],
-    });
-    return {
-      identifier: 'init',
-      fn: async () => {
-        this.fixture = TestBed.createComponent<T>(this.componentType);
-      },
-    };
+  build(): SuiteOperator {
+    return this.suiteOperator;
   }
 }

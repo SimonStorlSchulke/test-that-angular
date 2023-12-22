@@ -21,6 +21,20 @@
       }
     },
     {
+      "label": "ng serve test",
+      "type": "shell",
+      "command": "ng",
+      "args": [
+        "serve",
+        "--configuration=testing",
+        "--port=4201"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    },
+    {
       "type": "npm",
       "script": "test",
       "isBackground": true,

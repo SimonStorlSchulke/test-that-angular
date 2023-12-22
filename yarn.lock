@@ -5889,10 +5889,10 @@ test-exclude@^6.0.0:
     glob "^7.1.4"
     minimatch "^3.0.4"
 
-test-that@^0.1.8:
-  version "0.1.8"
-  resolved "https://registry.yarnpkg.com/test-that/-/test-that-0.1.8.tgz#9cee919a458d6629198229e17bf30249cb553446"
-  integrity sha512-JiKnez8TGpHtfYQXey8pZs2tSCt9BmOYJwFPWt9K0jMF+qnNEQGwL8IM1WNIJt7b264R2MaEZ2OYoBjz5tW98w==
+test-that@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/test-that/-/test-that-0.2.1.tgz#ae240ac3f065e9248095c826277054e4fe95b274"
+  integrity sha512-Q8gXjYHq1hzd7NapYF5OWq4IZkdzkshOTAJQ2ShIHJFQK1+RKNbmU8aZnbOkdzy49uBKo+sSFHmf3a1AV9iHdQ==
 
 text-table@0.2.0:
   version "0.2.0"

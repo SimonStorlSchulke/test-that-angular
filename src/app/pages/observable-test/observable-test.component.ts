@@ -12,15 +12,7 @@ type User = {
 };
 
 type UserPages = {
-  page: number;
-  per_page: number;
-  total: number;
-  total_pages: number;
   data: Array<User>;
-  support: {
-    url: string;
-    text: string;
-  };
 };
 
 @Component({
@@ -31,13 +23,17 @@ type UserPages = {
   styleUrl: './observable-test.component.scss',
 })
 export class ObservableTestComponent implements OnInit {
+  
   http = inject(HttpClient);
 
   users$: Observable<User[]> | null = null;
+  userNumber$: Observable<number> | null = null;
 
   ngOnInit() {
     this.users$ = this.http
       .get<UserPages>('https://reqres.in/api/users')
       .pipe(map((userPages) => userPages.data));
+
+    this.userNumber$ = this.users$.pipe(map((users) => users.length));
   }
 }

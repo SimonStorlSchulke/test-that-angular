@@ -6,9 +6,11 @@
         <div class="user">
             <img [src]="user.avatar">
             <div class="flex v gap-4 justify-center">
-                <b>{{user.first_name}} {{user.last_name}}</b>
+                <b testId="user-name">{{user.first_name}} {{user.last_name}}</b>
                 <span class="text-muted">{{user.email}}</span>
             </div>
         </div>
     }
 }
+
+<p testId="total-users">Total users: {{userNumber$ | async}}</p>

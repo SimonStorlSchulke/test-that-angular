@@ -1,47 +1,58 @@
+
 import { ObservableTestComponent } from './observable-test.component';
-import { TestThatFixture, createTestFixture } from '../../../tsst-that-ng/FixtureExtensions';
-import { RouterTestingModule } from '@angular/router/testing';
-import { TestSuite, check, init, test, xtest } from 'test-that';
-import { ActivatedRoute, Routes, UrlSegment } from '@angular/router';
+import {
+  TestThatFixture,
+  testThatFixture,
+} from '../../../test-that-ng/FixtureExtensions';
+import { Mock, TestSuite, check, init, mock, test } from 'test-that';
 import { of } from 'rxjs';
-
-import { TestBed} from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-
 
 let fixture: TestThatFixture<ObservableTestComponent>;
 
 new TestSuite(
   'Observables',
 
-  //componentTestBuilder<SidebarComponent>(fixture).build(),
-
   init(async () => {
-    await TestBed.configureTestingModule({
-        imports: [
-            ObservableTestComponent,
-            RouterTestingModule.withRoutes([
-              { path: 'home', component: {}},
-              { path: 'documentation', component: {}},
-            ] as Routes),
-          ],
-    });
+    fixture = await testThatFixture(ObservableTestComponent);
+  }),
 
-    fixture = createTestFixture(ObservableTestComponent);
+  test.that('Users get fetched and displayed', async () => {
 
-    await fixture.preview();
+    (fixture.componentInstance.http.get as Mock) = mock.returnWithArgs([
+      {args: ["https://reqres.in/api/users"], returnVal: of({
+        data: [
+          {
+            id: 1,
+            email: 'george.bluth@reqres.in',
+            first_name: 'George',
+            last_name: 'Bluth',
+            avatar: 'https://reqres.in/img/faces/1-image.jpg',
+          },
+          {
+            id: 2,
+            email: 'janet.weaver@reqres.in',
+            first_name: 'Janet',
+            last_name: 'Weaver',
+            avatar: 'https://reqres.in/img/faces/2-image.jpg',
+          },
+        ],
+      })}
+    ], null);
+
+    fixture.componentInstance.ngOnInit();
 
     fixture.detectChanges();
 
-    const route = new ActivatedRoute();
-    route.url = of([new UrlSegment('/', {})]);
-  }),
+    fixture.preview();
 
-  xtest.that('header renders', async () => {
-    check(fixture.nativeElement.innerHTML).stringIncludes('test.that()');
-  }),
+    const george = fixture.dom.queryTestId<HTMLElement>('user-name');
+    const totalUsers = fixture.dom.queryTestId<HTMLElement>('total-users');
 
-  xtest.that('navigates to documentation', () => {
-    check((fixture.debugElement.query(By.css(".documentation")).nativeElement.href)).stringIncludes("/documentation")
+    check(fixture.componentInstance.http.get).calledWithArgs([
+      'https://reqres.in/api/users',
+    ]);
+
+    check(george?.innerText).stringIncludes('George');
+    check(totalUsers?.innerText).equals('Total users: 2');
   })
 );
