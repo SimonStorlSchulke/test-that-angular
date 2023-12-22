@@ -3,11 +3,24 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "s3devperiments": {
+    "ng-test-that": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
-          "style": "scss"
+          "style": "scss",
+          "skipTests": true
+        },
+        "@schematics/angular:class": {
+          "skipTests": true
+        },
+        "@schematics/angular:directive": {
+          "skipTests": true
+        },
+        "@schematics/angular:pipe": {
+          "skipTests": true
+        },
+        "@schematics/angular:service": {
+          "skipTests": true
         }
       },
       "root": "",
@@ -17,7 +30,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/s3devperiments",
+            "outputPath": "dist/ng-test-that",
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -54,6 +67,19 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "testing": {
+              "optimization": false,
+              "extractLicenses": false,
+              "sourceMap": true,
+              "tsConfig": "tsconfig.test.json",
+              "styles": ["src/styles.test.scss"],
+              "fileReplacements": [
+                {
+                  "replace": "src/main.ts",
+                  "with": "src/main.test.ts"
+                }
+              ]
             }
           },
           "defaultConfiguration": "production"
@@ -62,10 +88,13 @@
           "builder": "@angular-devkit/build-angular:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "s3devperiments:build:production"
+              "buildTarget": "ng-test-that:build:production"
             },
             "development": {
-              "buildTarget": "s3devperiments:build:development"
+              "buildTarget": "ng-test-that:build:development"
+            },
+            "testing": {
+              "buildTarget": "ng-test-that:build:testing"
             }
           },
           "defaultConfiguration": "development"
@@ -73,7 +102,7 @@
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "buildTarget": "s3devperiments:build"
+            "buildTarget": "ng-test-that:build"
           }
         },
         "test": {
@@ -83,7 +112,7 @@
               "zone.js",
               "zone.js/testing"
             ],
-            "tsConfig": "tsconfig.spec.json",
+            "tsConfig": "tsconfig.test.json",
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
