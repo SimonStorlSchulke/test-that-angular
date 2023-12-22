@@ -73,7 +73,7 @@
               "extractLicenses": false,
               "sourceMap": true,
               "tsConfig": "tsconfig.test.json",
-              "styles": ["src/styles.test.scss"],
+              "styles": ["src/styles.test.scss", "src/styles.scss"],
               "fileReplacements": [
                 {
                   "replace": "src/main.ts",
@@ -106,7 +106,7 @@
           }
         },
         "test": {
-          "builder": "@angular-devkit/build-angular:karma",
+          "builder": "ng-test-that:build:testing",
           "options": {
             "polyfills": [
               "zone.js",

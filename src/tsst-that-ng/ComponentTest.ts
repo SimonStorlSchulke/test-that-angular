@@ -1,3 +1,4 @@
+import { routes } from './../app/app.routes';
 import { HttpClient } from '@angular/common/http';
 import {
   ApplicationRef,
@@ -9,7 +10,9 @@ import {
   Type,
   createComponent,
 } from '@angular/core';
+import { ComponentFixture } from '@angular/core/testing';
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideRouter } from '@angular/router';
 
 @Component({
   selector: 'app-root',
@@ -17,14 +20,6 @@ import { bootstrapApplication } from '@angular/platform-browser';
   standalone: true,
 })
 class TestRootComponent {}
-
-@Component({
-  selector: 'test-that-preview',
-  standalone: true,
-  imports: [],
-  template: '',
-})
-class TestThatPreviewComponent {}
 
 export function componentTestBuilder() {
   return new ComponentTestBuilder();
@@ -63,7 +58,8 @@ class ComponentTestBuilder {
     const host = document.createElement('div');
 
     const applicationRef = await bootstrapApplication(TestRootComponent, {
-      providers: this.providers,
+      
+      providers: [provideRouter(routes), ...this.providers], // provideRouter() might be needed at some point
     });
 
     const environmentInjector = applicationRef.injector;
@@ -72,7 +68,10 @@ class ComponentTestBuilder {
       environmentInjector: environmentInjector,
     });
 
-    const componentTest = new ComponentTest<C>(applicationRef, environmentInjector);
+    const componentTest = new ComponentTest<C>(
+      applicationRef,
+      environmentInjector
+    );
     await componentTest.init(host, comp);
 
     return componentTest;
@@ -130,24 +129,45 @@ export class ComponentTest<T> {
   }
 
   /** alias for instance.ngOnInit() */
-/*   onInit() {
+  /*   onInit() {
     if (this.instance.ngOnInit) this.instance.ngOnInit(); //TODO if maybe useless
   } */
 
   /** If forSeconds is set to anything but 0, this returns  */
-  async renderComponentPreview(forSeconds: number = 0, background: string = "") {
-    const previewWindow = document.querySelector<HTMLElement>(".test-preview")!;
-    previewWindow.innerHTML = "";
+  async renderComponentPreview(
+    forSeconds: number = 0,
+    background: string = ''
+  ) {
+    const previewWindow = document.querySelector<HTMLElement>('.test-preview')!;
+    previewWindow.innerHTML = '';
     previewWindow.append(this.host);
 
-    if(background != "") previewWindow.style.backgroundColor = background;
+    if (background != '') previewWindow.style.backgroundColor = background;
 
     // TODO make optional via run argument
-    if(forSeconds != 0) {
-      return new Promise((resolve) => setTimeout(() => {
+    return new Promise((resolve) =>
+      setTimeout(() => {
         resolve(null);
-      }, forSeconds * 1000))
-    }
-    return new Promise((resolve) => resolve)
+      }, forSeconds * 1000)
+    );
   }
+}
+
+export async function renderFixturePreview(
+  fixture: ComponentFixture<any>,
+  forSeconds: number = 0,
+  background: string = ''
+) {
+  const previewWindow = document.querySelector<HTMLElement>('.test-preview')!;
+  previewWindow.innerHTML = '';
+  previewWindow.append(fixture.nativeElement);
+
+  if (background != '') previewWindow.style.backgroundColor = background;
+
+  // TODO make optional via run argument
+  return new Promise((resolve) =>
+    setTimeout(() => {
+      resolve(null);
+    }, forSeconds * 1000)
+  );
 }

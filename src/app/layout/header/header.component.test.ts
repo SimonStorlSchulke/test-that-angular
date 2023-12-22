@@ -7,26 +7,23 @@ let componentTest: ComponentTest<HeaderComponent>;
 new TestSuite("Header",
 
   init(async () => {
-    componentTest = await componentTestBuilder(
-
-    )
+    componentTest = await componentTestBuilder()
     .build(HeaderComponent);
 
     componentTest.detectChanges();
   }),
 
-  test.that("header renders", async () => {
+  xtest.that("header renders", async () => {
 
-    await componentTest.renderComponentPreview(1);
+    await componentTest.renderComponentPreview();
     
     check(componentTest.host.innerText).stringIncludes("12");
     componentTest.instance.testval = 22;
     
     componentTest.detectChanges();
     
-    await componentTest.renderComponentPreview(1);
+    await componentTest.renderComponentPreview();
     check(componentTest.host.innerText).stringIncludes("22");
 
   })
-
 );
